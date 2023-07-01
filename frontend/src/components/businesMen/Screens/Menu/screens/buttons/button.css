@@ -1,0 +1,13 @@
+#buttonMenu{
+    transition: background 0.5s;
+    border-radius: 10px;
+}
+/* #buttonMenu:hover{
+    background: #3953e6;
+} */
+#buttonMenu:hover > *{
+    color: aliceblue;
+}
+#buttonMenu > *{
+    transition: all 0.5s;
+}
