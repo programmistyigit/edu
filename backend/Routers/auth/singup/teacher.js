@@ -4,10 +4,13 @@ const _ = require("lodash");
 const TeacherSchema = require("../../../MongoDB/Schema/TeacherSchema");
 const { GenerateToken } = require("../../../jwt/jsonwebtoken");
 const reverse_obj = require("../../../utils/reverse/in_bazaSchema_object");
+const CoursesSchema = require("../../../MongoDB/Schema/CoursesSchema");
 
 const routes = Router();
 routes.post("/", async (req, res) => {
-    const { value, error } = TeacherValidation.validate(_.pick(req.body, ["name", "firstName", "phoneNumber", "birthDay", "password", "confirmPassword", "spase", "location"]))
+    const allCourse = await CoursesSchema.find().lean()
+    if (allCourse.length == 0) return res.status(200).json({ status: "warning", message: "hali yonalishlar qoshilmadi admin tizim malumotlarini togirlashini kuting" })
+    const { value, error } = (await TeacherValidation()).validate(_.pick(req.body, ["name", "firstName", "phoneNumber", "birthDay", "password", "confirmPassword", "spase", "location"]))
     // esli error 
     if (error) {
         return (
@@ -23,7 +26,8 @@ routes.post("/", async (req, res) => {
                 )
         )
     }
-    // esli error 
+    // esli error
+    value.spase = value.spase.map(e => allCourse.map(g => g._id)[allCourse.findIndex(f => f.cours_name == e)])
     const teacher_obj = reverse_obj("teacher", value)
 
     const onTheBazaTeacher = await TeacherSchema.findOne(_.pick(teacher_obj, ["teacher_name", "teacher_firstName", "teacher_birthDay"]))
@@ -43,7 +47,8 @@ routes.post("/", async (req, res) => {
 
     // esli yest baza 
     const createBaza = await TeacherSchema.create(teacher_obj)
-    const token = GenerateToken({..._.pick(createBaza, ["teacher_name", "_id", "teacher_firstName"]) , role:"teacher"});
+    value.spase.map(async (id) => await CoursesSchema.findByIdAndUpdate(id, { $push: { cours_follow_teacher: createBaza._id } }))
+    const token = GenerateToken({ ..._.pick(createBaza, ["teacher_name", "_id", "teacher_firstName"]), role: "teacher" });
     res
         .cookie("auth", token)
         .status(200)

@@ -7,12 +7,23 @@ const router = require("express").Router()
 
 
 /*
-    * -----     route         =>   admin/cours/add             -------
+    * -----     route         =>   admin/cours/               -------
+    * -----     method        =>   GET                        -------
+    * -----     description   =>   Get all cours              -------
+    * -----     whoami        =>   admin                      -------
+*/
+router.get("/" , async ( req , res ) => {
+    const allCourse = await CoursesSchema.find().lean()
+    res.status(200).json( { status : "success" , data : allCourse} )
+})
+
+/*
+    * -----     route         =>   admin/cours/                -------
     * -----     method        =>   POST                        -------
     * -----     description   =>   add cours                   -------
     * -----     whoami        =>   admin                       -------
 */
-router.post("/add", async (req, res) => {
+router.post("/", async (req, res) => {
     const allCourse = await CoursesSchema.find()
     const { value, error } = Joi.object({ cours_name: Joi.string().not(...allCourse.map(acrs=>acrs.cours_name.toString())).required() }).validate(_.pick(req.body, ["cours_name"]))
     if (error) {
@@ -40,14 +51,14 @@ router.post("/add", async (req, res) => {
 
 
 /*
-    * -----     route         =>   admin/cours/delete          -------
+    * -----     route         =>   admin/cours/                -------
     * -----     method        =>   DELETE                      -------
     * -----     description   =>   delete cours                -------
     * -----     whoami        =>   admin                       -------
 */
-router.delete("/delete", async (req, res) => {
+router.delete("/", async (req, res) => {
     const { id } = req.body
-    if (!id || mongoose.Types.ObjectId.isValid(id)) {
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
         return (
             res
                 .status(400)
@@ -102,12 +113,12 @@ router.delete("/delete", async (req, res) => {
 
 
 /*
-    * -----     route         =>   admin/cours/edit            -------
+    * -----     route         =>   admin/cours/                -------
     * -----     method        =>   PUT                         -------
     * -----     description   =>   edit cours                  -------
     * -----     whoami        =>   admin                       -------
 */
-router.put("/edit" , async ( req , res ) => {
+router.put("/" , async ( req , res ) => {
     const allCourse = await CoursesSchema.find()
     const { error , value } = Joi.object({name : Joi.string().not(...allCourse.map(crs => crs.cours_name.toString())).required() , id:Joi.string().required()}).validate(_.pick(req.body , ["name" , "id"]))
     if(error){
@@ -125,7 +136,7 @@ router.put("/edit" , async ( req , res ) => {
         )
     }
 
-    if(mongoose.Types.ObjectId.isValid(id)){
+    if(!mongoose.Types.ObjectId.isValid(value.id)){
         return(
             res
                 .status(400)
