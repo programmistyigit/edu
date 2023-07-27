@@ -13,7 +13,7 @@ const businesmenSchema = new Schema({
     businesmen_wsConnectionIDS: { type: Array, default: [] },
     businesmen_followTeacherId: [{ type: Schema.Types.ObjectId, ref: "Teachers" }],
     businesmen_message: [{ type: Schema.Types.ObjectId, ref: "Messages" }],
-    businesmen_course_space: { type: Array, default: [{ space_name: "ona-tili", money_value: "0" }] },
+    businesmen_course_space: { type: Array, default: [] },
     businesmen_status : { type : Object  , default : { status: "run" , text : "" } },
     businesmen_class_teacher_plan : { type : String , default : 10 },
     businesmen_class_student_plan : { type : String , default : 10 }

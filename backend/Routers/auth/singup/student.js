@@ -9,10 +9,10 @@ const reverse_obj = require("../../../utils/reverse/in_bazaSchema_object");
 
 
 /*
-    * -----     route         =>   auth/singup/student               -------
+    * -----     route         =>   auth/singup/student                   -------
     * -----     method        =>   POST                                  -------
-    * -----     description   =>   sing up student                          -------
-    * -----     whoami        =>   guest                              -------
+    * -----     description   =>   sing up student                       -------
+    * -----     whoami        =>   guest                                 -------
 */
 
 routes.post("/" , async ( req, res ) => {

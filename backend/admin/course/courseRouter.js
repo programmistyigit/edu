@@ -93,7 +93,7 @@ router.delete("/", async (req, res) => {
                 .json(
                     {
                         status:"warning",
-                        message:`${course.cours_name} fanidan foydalanishmoqda oni ozgartirish mumkun lekin ochirib bolmaydi !`
+                        message:`${course.cours_name} fanidan foydalanishmoqda uni ozgartirish mumkun lekin ochirib bolmaydi !`
                     }
                 )
         )

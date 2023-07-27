@@ -14,7 +14,7 @@ const router = require("express").Router()
 
 router.post("/follow" , async ( req , res ) => {
     const {id} = req.body
-    if(!id || mongoose.Types.ObjectId.isValid(id)){
+    if(!id || !mongoose.Types.ObjectId.isValid(id)){
         return(
             res
                 .status(400)
@@ -77,7 +77,7 @@ router.post("/follow" , async ( req , res ) => {
 */
 router.post("/unfollow" , async ( req, res ) => {
     const { id } = req.body
-    if( !id || mongoose.Types.ObjectId.isValid(id) ) {
+    if( !id || !mongoose.Types.ObjectId.isValid(id) ) {
         return(
             res
                 .status(400)
@@ -118,6 +118,19 @@ router.post("/unfollow" , async ( req, res ) => {
         )
     }
 
+    await businesmen.populate({path : "businesmen_classesID" , strictPopulate:false})
+    if(businesmen.businesmen_classesID.map(e=>e.class_groupSpase).includes(course.cours_name)){
+        return(
+            res
+                .status(200)
+                .json(
+                    {
+                        status:"warning",
+                        message:`${course.cours_name} fanini ochirish uchun ushbu yonalishda gurux mavjud bolmasligi kerak!`
+                    }
+                )
+        )
+    }
     await BusinesMenSChema.findByIdAndUpdate(req.id , { $pull : { businesmen_course : course._id } } )
     await CoursesSchema.findByIdAndUpdate(course._id , { $pull : { cours_follow_businesmen : req.id } } )
     res
