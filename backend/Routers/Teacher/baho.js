@@ -1,11 +1,20 @@
 const { Router }    = require("express");
 const TeacherSchema = require("../../MongoDB/Schema/TeacherSchema");
 const ClassesSchema = require("../../MongoDB/Schema/ClassesSchema");
-const CoursesSchema = require("../../MongoDB/Schema/CoursesSchema");
 const Joi           = require("joi");
 const _             = require("lodash");
 const verify        = require("../../utils/function/verifiyHoursClass");
+const StudentSchema = require("../../MongoDB/Schema/StudentSchema");
 const router        = Router()
+
+
+
+/*
+    * -----     route         =>   techer/baho//:id                          -------
+    * -----     method        =>   POST                                      -------
+    * -----     description   =>   oquvchilarga baho qoysih                  -------
+    * -----     whoami        =>   teacher                                   -------
+*/
 
 router.post("/:id" ,  async ( req , res ) => {
     const courseID = req.params.id
@@ -119,6 +128,14 @@ router.post("/:id" ,  async ( req , res ) => {
 
 })
 
+
+/*
+    * -----     route         =>   techer/baho/:id                                                                       -------
+    * -----     method        =>   PUT                                                                                   -------
+    * -----     description   =>   oquvchilarni bahosini ozgartirish faqat oquvchi tomonidan soralganda                  -------
+    * -----     whoami        =>   teacher                                                                               -------
+*/
+
 router.put("/:id" , async ( req , res ) => {
     const courseID = req.params.id
     const teacherData = await TeacherSchema.findById(req.id)
@@ -155,9 +172,9 @@ router.put("/:id" , async ( req , res ) => {
             {
                 studentId : Joi.string().valid(...oldCourse.class_studentsId.map(e=>e._id.toString())).required(),
                 baho:Joi.number().min(1).max(10).required(),
-                data:Joi.date().min(new Date(Math.min(oldCourse.class_rating.map(e=>new Date(e.date))))).max(new Date(Math.max(oldCourse.class_rating.map(e=>new Date(e.date))))).required()
+                date:Joi.date().min(new Date(Math.min(oldCourse.class_rating.map(e=>new Date(e.date))))).max(new Date(Math.max(oldCourse.class_rating.map(e=>new Date(e.date))))).required()
             }
-        ).validate(_.pick(req.body , ["studentId" , "baho"]))
+        ).validate(_.pick(req.body , ["studentId" , "baho" , "date"]))
 
     if(error) {
         return (
@@ -172,7 +189,38 @@ router.put("/:id" , async ( req , res ) => {
                 )
         )
     }
+    const oldStudentRatingData = oldCourse.class_rating.find(e=> e.date == value.date).data.filter(e=>e.studentId == value.studentId)
+    
+    if(!oldStudentRatingData.change){
+        const student = await StudentSchema.findById(value.studentId)
+        return(
+            res
+                .status(400)
+                .json(
+                    {
+                        status:"error",
+                        message:`${student.student_name} hali bahoni ozgartirish uchun sorov yubormagan !`
+                    }
+                )
+        )
+    }
 
+
+    const newStudentRatingData = oldCourse.class_rating.map((rating) => {
+        if(rating.date == value.date) return {...rating.data , ..._.pick(value , ["baho"])}
+        else return rating
+    })
+
+    oldCourse = await ClassesSchema.findByIdAndUpdate(oldCourse._id , { $set : { class_rating : newStudentRatingData } } )
+
+    res
+        .status(200)
+        .json(
+            {
+                status:"succcess",
+                message:"success !"
+            }
+        )
 
 
 })
