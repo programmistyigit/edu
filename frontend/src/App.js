@@ -27,11 +27,11 @@ function App() {
     })
   } , [distpatch])
 
-  return(
-    <NotistakComponent />
-  )
+  // return(
+  //   <NotistakComponent />
+  // )
 
-  if(!data) return <h1>loading..</h1> ;
+  // if(!data) return <h1>loading..</h1> ;
 
 
   return (
