@@ -1,5 +1,5 @@
-const { default: mongoose } = require("mongoose")
-const ClassesSchema = require("../../../MongoDB/Schema/ClassesSchema")
+const { default: mongoose }     = require("mongoose")
+const ClassesSchema             = require("../../../MongoDB/Schema/ClassesSchema")
 
 const get = async (req, res) => {
     const id = req.params.id
@@ -17,7 +17,7 @@ const get = async (req, res) => {
         )
     }
 
-    if (classes.class_BigTeacherId._id.toJSON() != req.id.toString()) {
+    if (classes.class_BigTeacherId._id.toString() != req.id.toString()) {
         return (
             res
                 .status(400)
@@ -36,7 +36,7 @@ const get = async (req, res) => {
             {
                 status: "success",
                 message: "success!",
-                data: classes.class_attendance
+                data: classes
             }
         )
 }

@@ -1,5 +1,5 @@
-const { default: mongoose } = require("mongoose")
-const ClassesSchema = require("../../../MongoDB/Schema/ClassesSchema")
+const { default: mongoose }     = require("mongoose")
+const ClassesSchema             = require("../../../MongoDB/Schema/ClassesSchema")
 
 const yoqlamanMiddleware = async ( req , res , next ) => {
     const id = req.params.id

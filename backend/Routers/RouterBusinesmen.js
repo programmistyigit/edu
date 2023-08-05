@@ -1,11 +1,11 @@
-const { Router } = require("express");
-const BusinesMenSChema = require("../MongoDB/Schema/BusinesMenSChema");
-const classes = require("./Businesmen/classes")
-const teacherRouter = require("./Businesmen/teacher")
-const students = require("./Businesmen/students");
-const coursRouter = require("./Businesmen/course")
-const spaceRouter = require("./Businesmen/space");
-const planRouter = require("./Businesmen/plan");
+const { Router }            = require("express");
+const BusinesMenSChema      = require("../MongoDB/Schema/BusinesMenSChema");
+const classes               = require("./Businesmen/classes")
+const teacherRouter         = require("./Businesmen/teacher")
+const students              = require("./Businesmen/students");
+const coursRouter           = require("./Businesmen/course")
+const spaceRouter           = require("./Businesmen/space");
+const planRouter            = require("./Businesmen/plan");
 
 const routes = Router();
 

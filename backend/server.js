@@ -4,11 +4,11 @@ const { connectDB } = require("./MongoDB/connect")
 connectDB()
 
 
-const express = require("express")
-const app = express()
+const express   = require("express")
+const app       = express()
+const cors      = require("cors")
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
-const cors = require("cors")
 const cookieParser = require("cookie-parser")
 
 
@@ -19,12 +19,12 @@ app.use(cookieParser("salom"))
 
 
 // routing 
-const adminRouter = require("./admin/admin")
-const auth = require("./Routers/auth")
-const businesmenRouter = require("./Routers/RouterBusinesmen")
-const teacherRouter = require("./Routers/RouterTeachers")
-const studentRouter = require("./Routers/RouterStudent")
-const motherRouter = require("./Routers/RouterMother")
+const adminRouter       = require("./admin/admin")
+const auth              = require("./Routers/auth")
+const businesmenRouter  = require("./Routers/RouterBusinesmen")
+const teacherRouter     = require("./Routers/RouterTeachers")
+const studentRouter     = require("./Routers/RouterStudent")
+const motherRouter      = require("./Routers/RouterMother")
 const middlewareBusinesmen = require("./Middleware/MidlewareBusinesmen")
 const middlewareTeacher = require("./Middleware/MiddlewareTeacher")
 const middlewareStudent = require("./Middleware/MidlewareStudent")

@@ -1,10 +1,11 @@
 const Joi = require("joi")
 const ClassesSchema = require("../../../MongoDB/Schema/ClassesSchema")
 const { default: mongoose } = require("mongoose")
+const _ = require("lodash")
 
 const put = async (req, res) => {
     const id = req.params.id
-    const { error, value } = Joi.object({ data: Joi.array().items(Joi.object({ studentId: Joi.string().required(), attendance: Joi.boolean().required() })) }).validate(_.pick(req.body, ["data"]))
+    const { error, value } = Joi.object({ data: Joi.array().items(Joi.object({ studentId: Joi.string().required(), attendance: Joi.boolean().required() })).required() }).validate(_.pick(req.body, ["data"]))
     if (error) {
         return (
             res
@@ -50,7 +51,12 @@ const put = async (req, res) => {
     const studentIdValidateError = []
     const studentIdValidateSuccess = []
     const studentIdValidate = []
-    value.data.forEach(std => {
+    value.data.reduce((initialValue, currentValue) => {
+        if (initialValue.length == 0) {
+            return [currentValue]
+        }
+        return initialValue.map(e => e.studentId).includes(currentValue.studentId) ? initialValue : [...initialValue, currentValue]
+    }, []).forEach(std => {
         if (mongoose.Types.ObjectId.isValid(std.studentId)) {
             if (classes.class_studentsId.map(std1 => std1._id.toString()).includes(std.studentId.toString())) {
                 studentIdValidateSuccess.push(std.studentId)
@@ -61,15 +67,15 @@ const put = async (req, res) => {
         studentIdValidate.push(false)
     })
 
-    if(studentIdValidateError.length > 0){
-        return(
+    if (studentIdValidateError.length > 0) {
+        return (
             res
                 .status(400)
                 .json(
                     {
-                        status:"warning",
-                        message:'siz guruxda mavjud bolmagan oquvchilarni qoshib yubordingiz',
-                        data:studentIdValidateError
+                        status: "warning",
+                        message: 'siz guruxda mavjud bolmagan oquvchilarni qoshib yubordingiz',
+                        data: studentIdValidateError
                     }
                 )
         )
@@ -87,7 +93,7 @@ const put = async (req, res) => {
                 )
         )
     }
-    
+
 
 
     if (classes.class_studentsId.length > studentIdValidateSuccess.length) {
@@ -110,16 +116,23 @@ const put = async (req, res) => {
 
 
     const attendanceCourse = classes.class_attendance.reverse()
-    const newAttendanceCourse = attendanceCourse.map((item, index) => (index == 0 ? { ...value, date: item.date } : item)).reverse()
-    const newClasses = await ClassesSchema.findByIdAndUpdate(classes._id, { $set: { class_attendance: newAttendanceCourse } } , { new : true})
+    const newAttendanceCourse = attendanceCourse.map((item, index) => (index == 0 ? {
+        data:value.data.reduce((initialValue, currentValue) => {
+            if (initialValue.length == 0) {
+                return [currentValue]
+            }
+            return initialValue.map(e => e.studentId).includes(currentValue.studentId) ? initialValue : [...initialValue, currentValue]
+        }, []), date: item.date
+    } : item)).reverse()
+    const newClasses = await ClassesSchema.findByIdAndUpdate(classes._id, { $set: { class_attendance: newAttendanceCourse } }, { new: true })
 
     res
         .status(200)
         .json(
             {
-                status:"success",
-                message:`${classes.class_name} guruxi yoqlamasi ozgartirildi !`,
-                data:newClasses.class_attendance
+                status: "success",
+                message: `${classes.class_name} guruxi yoqlamasi ozgartirildi !`,
+                data: newClasses.class_attendance
             }
         )
 

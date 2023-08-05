@@ -5,7 +5,7 @@ const yoqlamanMiddleware = require("./yoqlama/use");
 const put = require("./yoqlama/put");
 const router = Router()
 /*
-    * -----     route         =>   techer/yoqlaman/submit/:id                   -------
+    * -----     route         =>   techer/yoqlama/submit/:id                   -------
     * -----     method        =>   POST GET PUT                                 -------
     * -----     description   =>   oquvchilarni yoqlama qilish                  -------
     * -----     whoami        =>   teacher                                      -------

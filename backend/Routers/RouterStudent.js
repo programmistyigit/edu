@@ -1,7 +1,7 @@
-const { Router } = require("express");
-const StudentSchema = require("../MongoDB/Schema/StudentSchema");
-const classRouter = require("./Student/class")
-const routes = Router();
+const { Router }        = require("express");
+const StudentSchema     = require("../MongoDB/Schema/StudentSchema");
+const classRouter       = require("./Student/class")
+const routes            = Router();
 
 /*
     * -----     route         =>   student/data_me                -------

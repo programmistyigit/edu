@@ -69,7 +69,19 @@ router.delete("/delete", async (req, res) => {
                 )
         )
     }
-
+    await businesmen.populate({path : "businesmen_classesID" , strictPopulate:false})
+    if(businesmen.businesmen_classesID.map(e=>e.class_space).includes(value.space_name)){
+        return (
+            res
+                .status(400)
+                .json(
+                    {
+                        status:"warning",
+                        message:"ushbu malumotni ochirishingiz uchun bu yonalishda hechqanday gurux bolmasligi kerak!"
+                    }
+                )
+        )
+    }
 
     const newDataSpace = businesmen.businesmen_course_space.filter(e => e.space_name == value.space_name)
     await BusinesMenSChema.findByIdAndUpdate(req.id, { $set: { businesmen_course_space: newDataSpace } })
@@ -114,24 +126,13 @@ router.put("/edit", async (req, res) => {
                 .json(
                     {
                         status: "validateError",
-                        message: "validatsiya hatoligi malumotlarni tekshirib qayta urunib koring !"
+                        message: "validatsiya hatoligi malumotlarni tekshirib qayta urunib koring !",
+                        target:error.details[0].path
                     }
                 )
         )
     }
 
-    if (!businesmen.businesmen_course_space.map(e => e.space_name).includes(value.target)) {
-        return (
-            res
-                .status(400)
-                .json(
-                    {
-                        status: "warning",
-                        message: `sizda ${value.target} fani yoriqnomada topilmadi !`
-                    }
-                )
-        )
-    }
 
 
     const newCourseSpaceData = businesmen.businesmen_course_space.map((e) => {
@@ -151,4 +152,7 @@ router.put("/edit", async (req, res) => {
             }
         )
 })
+
+
+
 module.exports = router

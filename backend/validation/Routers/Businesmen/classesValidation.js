@@ -1,5 +1,5 @@
-const Joi = require("joi");
-const BusinesMenSChema = require("../../../MongoDB/Schema/BusinesMenSChema");
+const Joi               = require("joi");
+const BusinesMenSChema  = require("../../../MongoDB/Schema/BusinesMenSChema");
 
 const classValidation = async (id) => {
     const space = (await BusinesMenSChema.findById(id)).businesmen_course_space.map(e=>e.space_name)

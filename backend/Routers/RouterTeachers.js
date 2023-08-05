@@ -1,9 +1,10 @@
-const { Router } = require("express");
-const _ = require("lodash")
-const yoqlamaRouter = require("./Teacher/yoqlaman")
-const routes = Router();
-const businesmenRouter = require("./Teacher/businesmen/businesmen");
-const TeacherSchema = require("../MongoDB/Schema/TeacherSchema");
+const { Router }        = require("express");
+const _                 = require("lodash");
+const yoqlamaRouter     = require("./Teacher/yoqlaman");
+const routes            = Router();
+const businesmenRouter  = require("./Teacher/businesmen/businesmen");
+const TeacherSchema     = require("../MongoDB/Schema/TeacherSchema");
+const Baho              = require("./Teacher/baho")
 
 /*
     * -----     route         =>   techer/data_me                                  -------
@@ -23,22 +24,34 @@ routes.get("/data_me", async (req, res) => {
 })
 
 /*
-    * -----     route         =>   techer/businesmen/*                                       -------
+    * -----     route         =>   techer/businesmen/*                                        -------
     * -----     method        =>   *                                                          -------
     * -----     description   =>   oquv markaz talim boyicha mutahasislari bilan ishlash      -------
-    * -----     whoami        =>   teacher                                                 -------
+    * -----     whoami        =>   teacher                                                    -------
 */
 
 routes.use("/businesmen", businesmenRouter)
 
 
 /*
-    * -----     route         =>   techer/yoqlaman/*                                       -------
-    * -----     method        =>   *                                                          -------
-    * -----     description   =>   oquvchilarni yoqlama qilish      -------
+    * -----     route         =>   techer/yoqlaman/*                                        -------
+    * -----     method        =>   *                                                        -------
+    * -----     description   =>   oquvchilarni yoqlama qilish                              -------
+    * -----     whoami        =>   teacher                                                  -------
+*/
+
+routes.use("/yoqlama", yoqlamaRouter)
+
+/*
+    * -----     route         =>   techer/baho/*                                           -------
+    * -----     method        =>   *                                                       -------
+    * -----     description   =>   oquvchilarga baho qoyish                                -------
     * -----     whoami        =>   teacher                                                 -------
 */
 
-routes.use("/yoqlaman", yoqlamaRouter)
+routes.use("/baho" , Baho)
+
+
+
 
 module.exports = routes;
