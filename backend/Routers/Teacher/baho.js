@@ -10,7 +10,7 @@ const router        = Router()
 
 
 /*
-    * -----     route         =>   techer/baho//:id                          -------
+    * -----     route         =>   techer/baho/:id                           -------
     * -----     method        =>   POST                                      -------
     * -----     description   =>   oquvchilarga baho qoysih                  -------
     * -----     whoami        =>   teacher                                   -------
