@@ -5,6 +5,7 @@ const Joi           = require("joi");
 const _             = require("lodash");
 const verify        = require("../../utils/function/verifiyHoursClass");
 const StudentSchema = require("../../MongoDB/Schema/StudentSchema");
+const { default: mongoose } = require("mongoose");
 const router        = Router()
 
 
@@ -18,10 +19,11 @@ const router        = Router()
 
 router.post("/:id" ,  async ( req , res ) => {
     const courseID = req.params.id
+    if(!mongoose.Types.ObjectId.isValid(courseID)) return res.status(400).json({status:"error" , message:"invalid class id"})
     const teacherData = await TeacherSchema.findById(req.id)
     let oldCourse = await ClassesSchema.findById(courseID)
     
-    if(teacherData.teacher_coursesID.map(e=>e._id.toString()).includes(courseID)){
+    if(!teacherData.teacher_coursesID.map(e=>e._id.toString()).includes(courseID)){
         return(
             res
                 .status(400)
@@ -34,7 +36,7 @@ router.post("/:id" ,  async ( req , res ) => {
         )
     }
 
-    if(oldCourse.class_status.text == "started"){
+    if(oldCourse.class_status.text != "started"){
         return (
             res
                 .status(400)
@@ -48,9 +50,14 @@ router.post("/:id" ,  async ( req , res ) => {
     }
     
     const date = new Date()
+    const currentDay = `${date.getFullYear()}.${date.getMonth()+1}.${date.getDate()}`
+
 
     const tableData = oldCourse.class_table
     const dayTable = tableData.find(e=>e.day == date.getDay())
+
+    if(!dayTable) return res.status(400).json({ status : "warning" , message : "baholarni dars vaqtida qoying !" })
+    
     const resultVerifyFunction = verify(dayTable.hours.split(":")[0] , dayTable.duration , date.getHours())
     if(!resultVerifyFunction){
         return (
@@ -65,6 +72,18 @@ router.post("/:id" ,  async ( req , res ) => {
         )
     }
 
+    if(oldCourse.class_attendance.length == 0 || !oldCourse.class_attendance.find(e=>e?.date == currentDay)){
+        return(
+            res
+                .status(400)
+                .json(
+                    {
+                        status:"warning",
+                        message:"oldin yoqlama qiling !"
+                    }
+                )
+        )
+    }
 
 
     const { value , error } = Joi
@@ -75,12 +94,12 @@ router.post("/:id" ,  async ( req , res ) => {
                         Joi.object(
                             {
                                 id:Joi.string()
-                                    .valid(...oldCourse.class_studentsId.map(e=>e.toString()))
+                                    .valid(...oldCourse.class_attendance.find(e=>e.date == currentDay).data.filter(e=>e.attendance == true).map(e=>e.studentId.toString()))
                                     .required() , 
                                 baho : Joi.number().min(1).max(10).required()
                             }
                         )
-                    )
+                    ).required()
             }
         )
     .validate(_.pick(req.body , ["students"]))
@@ -101,20 +120,40 @@ router.post("/:id" ,  async ( req , res ) => {
     }
     
 
-    const currentDay = `${date.getFullYear()}.${date.getMonth()+1}.${date.getDate()}`
-    if(oldCourse.class_rating.reverse()[0].date != currentDay){
-        oldCourse = await ClassesSchema.findByIdAndUpdate(courseID , { $push : {class_rating : { data : oldCourse.class_studentsId.map( e => ( { stdentId : e , baho : 0 , change : true  , outOfControl:false} ) ) , date:currentDay } } } , { new : true })
+    if(oldCourse.class_rating.length == 0 || oldCourse.class_rating.reverse()[0]?.date != currentDay){
+        oldCourse = await ClassesSchema.findByIdAndUpdate(courseID , 
+            { 
+                $push : {
+                    class_rating : { 
+                        data : oldCourse.class_studentsId.map( e => ( 
+                                    { 
+                                        studentId : e , 
+                                        baho : 0 , 
+                                        change : false  , 
+                                        outOfControl:true
+                                    } 
+                                ) 
+                            ) , 
+                        date:currentDay 
+                    } 
+                } 
+            } , 
+            { new : true })
     }
 
-    const newCurrentDayRatingDate = oldCourse.class_rating.reverse()[0].data.map( e => {
-        const student = value.students.find(e=> e.id === e.studentId)
-        if(student) return { ...e , baho : student.baho }
-        else return e
+    const currentDayRating = oldCourse.class_rating.find(e=>e.date == currentDay).data.map(student => {
+        console.log(student);
+        if(value.students.map(v => v.id).includes(student.studentId.toString())){
+            return {...student , baho : value.students.find(v=>v.id == student.studentId.toString()).baho}
+        }
+        else return student
+    })
+    const newRating = oldCourse.class_rating.map(rating => {
+        if(rating.date == currentDay) return {...rating , data : currentDayRating}
+        else rating
     })
 
-    const allRatingDate = oldCourse.class_rating.reverse().map(( e , i ) => (i == 0 ? newCurrentDayRatingDate : e))
-
-    oldCourse = await ClassesSchema.findOneAndUpdate(oldCourse._id ,  { $set : { class_rating : allRatingDate } } ,  { new : true } )
+    oldCourse = await ClassesSchema.findOneAndUpdate(oldCourse._id ,  { $set : { class_rating : newRating } } ,  { new : true } )
 
     res
         .status(200)
