@@ -55,6 +55,7 @@ router.post("/:id" ,  async ( req , res ) => {
 
     const tableData = oldCourse.class_table
     const dayTable = tableData.find(e=>e.day == date.getDay())
+    const currentDayAttendance = oldCourse.class_attendance.length > 0 ? oldCourse.class_attendance.find(e=>e.date == currentDay) : null
 
     if(!dayTable) return res.status(400).json({ status : "warning" , message : "baholarni dars vaqtida qoying !" })
     
@@ -72,7 +73,7 @@ router.post("/:id" ,  async ( req , res ) => {
         )
     }
 
-    if(oldCourse.class_attendance.length == 0 || !oldCourse.class_attendance.find(e=>e?.date == currentDay)){
+    if(oldCourse.class_attendance.length == 0 || !currentDayAttendance){
         return(
             res
                 .status(400)
@@ -94,7 +95,7 @@ router.post("/:id" ,  async ( req , res ) => {
                         Joi.object(
                             {
                                 id:Joi.string()
-                                    .valid(...oldCourse.class_attendance.find(e=>e.date == currentDay).data.filter(e=>e.attendance == true).map(e=>e.studentId.toString()))
+                                    .valid(...oldCourse.class_studentsId.map(e=>e._id.toString()))
                                     .required() , 
                                 baho : Joi.number().min(1).max(10).required()
                             }
@@ -103,6 +104,9 @@ router.post("/:id" ,  async ( req , res ) => {
             }
         )
     .validate(_.pick(req.body , ["students"]))
+
+    const dontAttendanceStudentList = currentDayAttendance.data.filter(at => !at.attendance)
+    const verifyStudents = value.students.filter(student => !dontAttendanceStudentList.map(e=>e.studentId.toString()).includes(student.id))
     
 
     if( error ) {
@@ -142,9 +146,8 @@ router.post("/:id" ,  async ( req , res ) => {
     }
 
     const currentDayRating = oldCourse.class_rating.find(e=>e.date == currentDay).data.map(student => {
-        console.log(student);
-        if(value.students.map(v => v.id).includes(student.studentId.toString())){
-            return {...student , baho : value.students.find(v=>v.id == student.studentId.toString()).baho}
+        if(verifyStudents.map(v => v.id).includes(student.studentId.toString())){
+            return {...student , baho : verifyStudents.find(v=>v.id == student.studentId.toString()).baho}
         }
         else return student
     })
@@ -211,7 +214,7 @@ router.put("/:id" , async ( req , res ) => {
             {
                 studentId : Joi.string().valid(...oldCourse.class_studentsId.map(e=>e._id.toString())).required(),
                 baho:Joi.number().min(1).max(10).required(),
-                date:Joi.date().min(new Date(Math.min(oldCourse.class_rating.map(e=>new Date(e.date))))).max(new Date(Math.max(oldCourse.class_rating.map(e=>new Date(e.date))))).required()
+                date:Joi.date().valid(oldCourse.class_attendance.reverse()[0].date).required()
             }
         ).validate(_.pick(req.body , ["studentId" , "baho" , "date"]))
 
