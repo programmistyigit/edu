@@ -52,6 +52,13 @@ routes.use("/yoqlama", yoqlamaRouter)
 routes.use("/baho" , Baho)
 
 
+/*
+    * -----     route         =>   techer/thema/*                                          -------
+    * -----     method        =>   *                                                       -------
+    * -----     description   =>   bugungi kunga mavzu qoyish                              -------
+    * -----     whoami        =>   teacher                                                 -------
+*/
 
+routes.use("/thema" , )
 
 module.exports = routes;

@@ -13,7 +13,8 @@ const classesSchema = new Schema({
     class_status:{type:Object , default : {status:"danger" , text:"initializing"}},
     class_table:{type:Array , required:true},
     class_BusinesmenID:{type:Schema.Types.ObjectId ,ref:"Businesmens" , required:true },
-    class_rate:{type:Number , default:0}
+    class_rate:{type:Number , default:0},
+    class_thema:{type:Array , default:[]}
 })
 
 module.exports = model("Classes", classesSchema)

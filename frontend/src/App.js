@@ -13,19 +13,19 @@ function App() {
   const thema = useSelector(e=>e.thema)
   const distpatch = useDispatch()
   const [data , setData] = useState(undefined)
-  useEffect(()=>{
-    fetch("http://localhost:5000/businesmen")
-    .then(respons=>respons.json())
-    .then(({BusinesMenData , Students , Techars , mother})=>{
-      const classes = BusinesMenData.classes.map(classesItem=> ({...classesItem , students:Students.filter(studentData=> classesItem.studentsId.includes(studentData.id))}) )
-      distpatch(add(classes))
-      distpatch(addStudent(Students))
-      distpatch(addTeacher(Techars))
-      distpatch(addMother(mother))
-      setData(true)
-      console.log(mother);
-    })
-  } , [distpatch])
+  // useEffect(()=>{
+  //   fetch("http://localhost:5000/businesmen")
+  //   .then(respons=>respons.json())
+  //   .then(({BusinesMenData , Students , Techars , mother})=>{
+  //     const classes = BusinesMenData.classes.map(classesItem=> ({...classesItem , students:Students.filter(studentData=> classesItem.studentsId.includes(studentData.id))}) )
+  //     distpatch(add(classes))
+  //     distpatch(addStudent(Students))
+  //     distpatch(addTeacher(Techars))
+  //     distpatch(addMother(mother))
+  //     setData(true)
+  //     console.log(mother);
+  //   })
+  // } , [distpatch])
 
   // return(
   //   <NotistakComponent />
