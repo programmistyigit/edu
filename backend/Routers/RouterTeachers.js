@@ -5,7 +5,7 @@ const routes            = Router();
 const businesmenRouter  = require("./Teacher/businesmen/businesmen");
 const TeacherSchema     = require("../MongoDB/Schema/TeacherSchema");
 const Baho              = require("./Teacher/baho")
-
+const Thema             = require("./Teacher/thema")
 /*
     * -----     route         =>   techer/data_me                                  -------
     * -----     method        =>   GET                                             -------
@@ -59,6 +59,6 @@ routes.use("/baho" , Baho)
     * -----     whoami        =>   teacher                                                 -------
 */
 
-routes.use("/thema" , )
+routes.use("/thema" , Thema)
 
 module.exports = routes;

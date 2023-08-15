@@ -2,7 +2,7 @@ const { Schema, model, default: mongoose } = require("mongoose");
 
 const classesSchema = new Schema({
     class_name: { type: String, required: true },
-    class_groupSpase: { type: String, required: true },
+    class_groupSpase: { type: Schema.Types.ObjectId , ref : "Courses"},
     class_durationDays: { type: String, required: true },
     class_theDayAfterTheStart: { type: String, default: "0" },
     class_BigTeacherId: { type: Schema.Types.ObjectId, ref:"Teachers", required: true },

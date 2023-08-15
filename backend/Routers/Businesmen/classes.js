@@ -10,6 +10,7 @@ const classRateValidate = require("../../validation/Routers/Businesmen/classRate
 const Joi = require("joi");
 const StudentSchema = require("../../MongoDB/Schema/StudentSchema");
 const reverse_obj = require("../../utils/reverse/in_bazaSchema_object");
+const CoursesSchema = require("../../MongoDB/Schema/CoursesSchema");
 
 const router = Router()
 
@@ -68,6 +69,7 @@ router.post("/add", async (req, res) => {
     }
 
     const BigTeacher = await TeacherSchema.findById(value.BigTeacherId).lean()
+    const spaceId = await CoursesSchema.findOne({cours_name : value.groupSpase})
 
     if (!BigTeacher) {
         return (
@@ -81,6 +83,7 @@ router.post("/add", async (req, res) => {
                 )
         )
     }
+    if(!BigTeacher.teacher_spase.map(e=>e._id.toString()).includes(spaceId._id.toString())) return res.status(400).json( { status : "warning" , message : `belgilangan ustoz ${spaceId.cours_name} dars otmaydi`})
 
     if (!businesmen.businesmen_teachersID.map(e => e._id.toString()).includes(value.BigTeacherId.toString())) {
         return (
@@ -97,8 +100,8 @@ router.post("/add", async (req, res) => {
 
     const class_obj = reverse_obj("class", value)
 
-
-    const create = await ClassesSchema.create({ ...class_obj, class_BusinesmenID: req.id })
+    
+    const create = await ClassesSchema.create({ ...class_obj, class_BusinesmenID: req.id , class_groupSpase :  spaceId._id})
     await BusinesMenSChema.findByIdAndUpdate(req.id, { $push: { businesmen_classesID: create._id } })
     await TeacherSchema.findByIdAndUpdate(BigTeacher._id, { $push: { teacher_coursesID: create._id } })
     res
