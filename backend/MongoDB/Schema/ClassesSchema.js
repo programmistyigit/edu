@@ -7,6 +7,7 @@ const classesSchema = new Schema({
     class_theDayAfterTheStart: { type: String, default: "0" },
     class_BigTeacherId: { type: Schema.Types.ObjectId, ref:"Teachers", required: true },
     class_studentsId: [{ type: Schema.Types.ObjectId, ref: "Students" }],
+    class_follow_studentsId: [{ type: Schema.Types.ObjectId, ref: "Students" }],
     class_rating: { type: Array, default: [] },
     class_attendance: { type: Array, default: [] },
     class_maxNumberStudent:{type:Number , required:true},

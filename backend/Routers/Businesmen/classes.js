@@ -11,7 +11,7 @@ const Joi = require("joi");
 const StudentSchema = require("../../MongoDB/Schema/StudentSchema");
 const reverse_obj = require("../../utils/reverse/in_bazaSchema_object");
 const CoursesSchema = require("../../MongoDB/Schema/CoursesSchema");
-
+const follow_student_router = require("./classes/follow_student")
 const router = Router()
 
 /*
@@ -404,7 +404,7 @@ router.post("/remove_student", async (req, res) => {
                 )
         )
     }
-    if (!mongoose.Types.ObjectId.isValid(value.studentId) && !mongoose.Types.ObjectId.isValid(value.studentId)) {
+    if (!mongoose.Types.ObjectId.isValid(value.studentId) && !mongoose.Types.ObjectId.isValid(value.classId)) {
         return (
             res
                 .status(400)
@@ -461,7 +461,7 @@ router.post("/remove_student", async (req, res) => {
         )
     }
 
-    if (!(await classes.populate({ path: "class_studentsId", strictPopulate: false })).class_studentsId.map(std => std._id).includes(value.studentId)) {
+    if (classes.class_studentsId.map(e=>e._id.toString()).includes(value.studentId)) {
         return (
             res
                 .status(400)
@@ -487,6 +487,13 @@ router.post("/remove_student", async (req, res) => {
         )
 })
 
+/*
+    * -----     route         =>   businesmen/follow_student                                    -------
+    * -----     method        =>   *                                                            -------
+    * -----     description   =>   guruxga yozilish uchun ariza jonatganlar bilan ioshlash      -------
+    * -----     whoami        =>   businesmen                                                   -------
+*/
+router.use("/follow_student" , follow_student_router)
 
 
 

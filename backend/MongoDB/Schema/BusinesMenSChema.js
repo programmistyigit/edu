@@ -16,7 +16,8 @@ const businesmenSchema = new Schema({
     businesmen_course_space: { type: Array, default: [] },
     businesmen_status : { type : Object  , default : { status: "run" , text : "" } },
     businesmen_class_teacher_plan : { type : String , default : 10 },
-    businesmen_class_student_plan : { type : String , default : 10 }
+    businesmen_class_student_plan : { type : String , default : 10 },
+    businesmen_not_success_message_default_text:{ type : String , default : "Gurux Tolib qoldi ! Yangi gurux Ochilishini Kuting !"},
 })
 
 module.exports = model("Businesmens", businesmenSchema)

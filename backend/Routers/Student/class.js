@@ -73,8 +73,23 @@ router.get("/follow/:id", async (req, res) => {
         )
     }
 
-    await ClassesSchema.findByIdAndUpdate(id, { $push: { class_studentsId: req.id } })
-    await StudentSchema.findByIdAndUpdate(req.id, { $push: { student_classesID: classes._id } })
+    if (classes.class_follow_studentsId.map(e => e._id.toString()).includes(req.id.toString())) {
+        const student = await StudentSchema.findById(req.id)
+        if (!student.student_classesID.map(e => e._id.toString()).includes(classes._id.toString())) {
+            await StudentSchema.findByIdAndUpdate(req.id, { $push: { student_classesID: classes._id } })
+        }
+        return (
+            res
+                .status(400)
+                .json(
+                    {
+                        status: "warning",
+                        message: `siz allaqachon ${classes.class_name} guruxiga ariza jo'natgansiz!`
+                    }
+                )
+        )
+    }
+    await ClassesSchema.findByIdAndUpdate(id, { $push: { class_follow_studentsId: req.id } })
 
 
     res
@@ -83,13 +98,9 @@ router.get("/follow/:id", async (req, res) => {
             {
                 status: "success",
                 message: "success!",
-                data:classes
+                data: classes
             }
         )
-    if (classes.class_maxNumberStudent == classes.class_studentsId.length) {
-        await ClassesSchema.findByIdAndUpdate(classes._id, { $set: { class_status: { status: "success", text: "started" } } })
-        events.emit("startClass", _.pick(classes, ["_id"]))
-    }
 })
 
 /*
@@ -99,7 +110,7 @@ router.get("/follow/:id", async (req, res) => {
     * -----     whoami        =>   student                             -------
 */
 
-router.get("/unfollow/:id" , async ( req , res ) => {
+router.get("/unfollow/:id", async (req, res) => {
     const id = req.params.id
     if (!id) {
         return (
@@ -141,28 +152,33 @@ router.get("/unfollow/:id" , async ( req , res ) => {
         )
     }
 
-    if(!classes.class_studentsId.map(e=>e._id.toString()).includes(req.id.toString())){
-        return(
+    if (!classes.class_studentsId.map(e => e._id.toString()).includes(req.id.toString())) {
+        if (classes.class_follow_studentsId.map(e => e._id.toString()).includes(req.id.toString())) {
+            await ClassesSchema.findByIdAndUpdate(classes._id, { $pull: { class_follow_studentsId: req.id } })
+            await StudentSchema.findByIdAndUpdate(req.id, { $pull: { student_classesID: classes._id } })
+            return res.status(200).json({ status: "success", message: `Siz ${classes.class_name} guruxidan vos kechdingiz !`, data: classes._id })
+        }
+        return (
             res
                 .status(400)
                 .json(
                     {
-                        status:"warning",
-                        message:`Siz ${classes.class_name} guruxiga royhatga olinmagansiz!`
+                        status: "warning",
+                        message: `Siz ${classes.class_name} guruxiga royhatga olinmagansiz!`
                     }
                 )
         )
     }
 
-    await ClassesSchema.findByIdAndUpdate(classes._id , { $pull : { class_studentsId : req.id } } )
-    await StudentSchema.findByIdAndUpdate(req.id , { $pull : { student_classesID : classes._id } } )
+    await ClassesSchema.findByIdAndUpdate(classes._id, { $pull: { class_studentsId: req.id } })
+    await StudentSchema.findByIdAndUpdate(req.id, { $pull: { student_classesID: classes._id } })
     res
         .status(200)
         .json(
             {
-                status:"success",
-                message:`Siz ${classes.class_name} guruxidan vos kechdingiz !`,
-                data:classes._id
+                status: "success",
+                message: `Siz ${classes.class_name} guruxidan vos kechdingiz !`,
+                data: classes._id
             }
         )
 
