@@ -85,10 +85,15 @@ router.post("/:id" , async ( req , res ) => {
     const notification = await generateMessage({_id : req.id , role : businesmen.businesmen_companyName} , `${classes.class_name} guruxiga ${classes.class_studentsId.length}-qouvchi bolib qabul qilindingiz , ${parseInt(classes.class_maxNumberStudent) == classes.class_studentsId.length ? message : "gurux toldi . oquv markaz tomonidan dars boshlanish habarini kuting !"} `   )
     await StudentSchema.findByIdAndUpdate(student._id , { $push : { student_notification : notification._id } } )
 
+    res.status(200).json( { status : "success" , message : `${student.student_name}ga sorovini qabul qilganligingiz xabari yuborildi!`})
+    
     if(classes.class_follow_studentsId.length > 0){
         const notSuccessMessage = await generateMessage({ _id : req.id , role : businesmen.businesmen_companyName } , businesmen.businesmen_not_success_message_default_text)
+        const notAcceptedStudents = await ClassesSchema.findById(classes)
+        for( let i = 0 ; i < notAcceptedStudents.class_follow_studentsId.length ; i ++ ){
+            await StudentSchema.findByIdAndUpdate(notAcceptedStudents.class_follow_studentsId[i]._id , { $push : { student_notification : notSuccessMessage._id}})
+        }
     }
-    res.status(200).json( { status : "success" , message : `${student.student_name}ga sorovini qabul qilganligingiz xabari yuborildi!`})
 })
 
 module.exports = router
