@@ -19,17 +19,17 @@ app.use(cookieParser("salom"))
 
 
 // routing 
-const adminRouter       = require("./admin/admin")
-const auth              = require("./Routers/auth")
-const businesmenRouter  = require("./Routers/RouterBusinesmen")
-const teacherRouter     = require("./Routers/RouterTeachers")
-const studentRouter     = require("./Routers/RouterStudent")
-const motherRouter      = require("./Routers/RouterMother")
-const middlewareBusinesmen = require("./Middleware/MidlewareBusinesmen")
-const middlewareTeacher = require("./Middleware/MiddlewareTeacher")
-const middlewareStudent = require("./Middleware/MidlewareStudent")
-const middlewareMother = require("./Middleware/MidlewareMother")
-
+const adminRouter           = require("./admin/admin")
+const auth                  = require("./Routers/auth")
+const businesmenRouter      = require("./Routers/RouterBusinesmen")
+const teacherRouter         = require("./Routers/RouterTeachers")
+const studentRouter         = require("./Routers/RouterStudent")
+const motherRouter          = require("./Routers/RouterMother")
+const middlewareBusinesmen  = require("./Middleware/MidlewareBusinesmen")
+const middlewareTeacher     = require("./Middleware/MiddlewareTeacher")
+const middlewareStudent     = require("./Middleware/MidlewareStudent")
+const middlewareMother      = require("./Middleware/MidlewareMother")
+const isLoginRouter         = require("./Routers/isLogin/verify")
 
 app.use("/admin" , adminRouter)
 app.use("/auth" , auth)
@@ -37,7 +37,7 @@ app.use("/businesmen" ,middlewareBusinesmen , businesmenRouter)
 app.use("/teacher" , middlewareTeacher , teacherRouter)
 app.use("/student" , middlewareStudent , studentRouter)
 app.use("/mother" , middlewareMother , motherRouter)
-
+app.use("/islogin" , isLoginRouter)
 
 // app.get("/businesmen", (req, res) => {
 //     res

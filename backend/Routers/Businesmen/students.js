@@ -59,34 +59,7 @@ router.post("/message", async (req, res) => {
     }
 
 
-    const businesmen = await BusinesMenSChema.findById(req.id).populate({ path: "businesmen_classesID", strictPopulate: false })
-    const studentsIDlist = Array(0).concat(...businesmen.businesmen_classesID.map(clas => clas.class_studentsId.map(s => s._id)))
-    if (!studentsIDlist.includes(value.targetUser.id)) {
-        return (
-            res
-                .status(400)
-                .json(
-                    {
-                        status: "warning",
-                        message: "ushbu oquvchi sizning oquv markazingizdan royhatdan otmagan yoki yaqin orada oqishni tark etdi"
-                    }
-                )
-        )
-    }
-
-    const message = await MessageSchema.create({ message_text: message_value.text, message_from: req.id, message_to: student._id })
-    res
-        .status(200)
-        .json(
-            {
-                status: "success",
-                message: "habar jonatildi",
-                data: message
-            }
-        )
-
-    await StudentSchema.findByIdAndUpdate(student._id, { $push: { student_message: message._id } })
-    studentEvents.emit("message", ({ _id: student._id, msg: message }))
+ 
 })
 
 /*
