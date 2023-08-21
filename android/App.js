@@ -3,6 +3,8 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import server from './helpers/connection/server';
 import Auth from './components/Auth';
+import { Provider } from 'react-redux';
+import store from './stories';
 
 export default function App() {
   const [isLogin, setIsLogin] = useState(null);
@@ -22,7 +24,12 @@ export default function App() {
   }
 
   if (!isLogin) {
-    return <Auth />;
+
+    return (
+      <Provider store={store}>
+        <Auth />
+      </Provider> 
+    );
   }
 
   return (
