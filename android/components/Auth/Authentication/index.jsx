@@ -4,23 +4,23 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { useDispatch } from 'react-redux'
 import { setRole } from '../../../stories/role'
 import SelectRole from './SelectRole/Select'
+import FormData from './formData'
 
 const StackNavigate = createStackNavigator()
 
 
 
 const Authentication = ({ route }) => {
-  const role = route?.params?.which
+  const which = route?.params?.which
   const distpatch = useDispatch()
-  useEffect(() => { distpatch(setRole({ role })) }, [])
+  useEffect(() => { distpatch(setRole({ status:which })) }, [])
 
   return (
     <StackNavigate.Navigator>
-      <StackNavigate.Screen name='select' component={SelectRole} />
-      <StackNavigate.Screen name='getData' component={SelectRole} />
+      <StackNavigate.Screen options={{ headerShown: false }} name='select' component={SelectRole} />
+      <StackNavigate.Screen options={{ headerShown: false }} name='getData' component={FormData} />
     </StackNavigate.Navigator>
   )
-
 }
 
 

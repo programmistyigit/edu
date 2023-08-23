@@ -1,11 +1,14 @@
 import { StyleSheet, Text, View } from "react-native"
+import { useDispatch } from "react-redux"
+import { setRole } from "../../../../stories/role"
 
 const SelectRole = ({ navigation }) => {
 
-    const handleClick = (role) => navigation.navigate({
-        name: "getData",
-        params: { role }
-    })
+    const distpach = useDispatch()
+    const handleClick = (role) => {
+        distpach(setRole({role}))
+        navigation.navigate("getData")
+    }
 
     return (
         <View style={style.container}>
