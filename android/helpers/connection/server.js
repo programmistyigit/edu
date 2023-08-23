@@ -1,4 +1,4 @@
-export const serverHost = "https://6583-84-54-70-174.ngrok-free.app"
+export const serverHost = "https://849c-213-230-93-248.ngrok-free.app"
 
 class Server {
     constructor(host){
@@ -6,16 +6,26 @@ class Server {
     }
 
     async fetch(path , option={}){
-        const respons = await fetch(`${this.serverHost}${path}` , { method : "GET" , credentials : "include" , ...option } )
+        const respons = await fetch(`${this.serverHost}${path}` , { method : "GET" , credentials : "include" , ...option} )
         return await respons.json()
     }
 
     async isLogin (){
         const respons = await this.fetch("/islogin")
-        if(respons?.data?.isLogin) return respons
-        
-        return false
+        return respons.data.isLogin
     }
+    
+    async logOut() {return await this.fetch("/logOut") }
+    
+    login = {
+        teacher : async (options) => {
+            const response = await this.fetch(`/auth/login/teacher` , options)
+            return response
+        }
+    }
+    async getCityList () { return this.fetch("/cityList")}
+    async getSpaceList () { return this.fetch("/spaceList")}
+
 }
 
 export default new Server(serverHost)

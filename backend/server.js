@@ -30,6 +30,8 @@ const middlewareTeacher     = require("./Middleware/MiddlewareTeacher")
 const middlewareStudent     = require("./Middleware/MidlewareStudent")
 const middlewareMother      = require("./Middleware/MidlewareMother")
 const isLoginRouter         = require("./Routers/isLogin/verify")
+const cityListRouter        = require("./Routers/cityList")
+const spaceList             = require("./Routers/spaceList")
 
 app.use("/admin" , adminRouter)
 app.use("/auth" , auth)
@@ -38,6 +40,11 @@ app.use("/teacher" , middlewareTeacher , teacherRouter)
 app.use("/student" , middlewareStudent , studentRouter)
 app.use("/mother" , middlewareMother , motherRouter)
 app.use("/islogin" , isLoginRouter)
+app.use("/cityList" , cityListRouter)
+app.use("/spaceList" , spaceList)
+app.get("/logOut" , (req ,res) => {
+    res.clearCookie("auth" , { maxAge: 60 * 60 * 24 * 100 }).status(200).json({status:"success"})
+})
 
 // app.get("/businesmen", (req, res) => {
 //     res
@@ -50,7 +57,7 @@ app.use("/islogin" , isLoginRouter)
 app.use((err, req, res, next) => {
     console.log(err);
     if (err) return res.status(500).json({ status: "error", message: "serverda kutilmagan hatolik"  , error:err.toString()})
-    next()
+    else next()
 })
 
 
