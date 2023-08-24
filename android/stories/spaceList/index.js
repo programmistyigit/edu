@@ -4,7 +4,7 @@ const spaceList = createSlice({
     name : "spaceList",
     initialState:[],
     reducers:{
-        setSpaceList(state , action){ return [...state , ...action.payload]}
+        setSpaceList(_ , action){ return action.payload}
     }
 })
 

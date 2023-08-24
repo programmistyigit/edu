@@ -12,7 +12,7 @@ const TeacherValidation = async () => {
         password: Joi.string().required(),
         confirmPassword: Joi.ref("password"),
         spase: Joi.array().items(Joi.string().valid(...allCourse.map(e=>e.cours_name)).required()).required(),
-        location: Joi.object({ viloyat: Joi.string().required(), tuman: Joi.string(), mahalla: Joi.string().required() }).required()
+        location: Joi.object({ viloyat: Joi.string().required(), tuman: Joi.string().required()}).required()
 
     })
 }

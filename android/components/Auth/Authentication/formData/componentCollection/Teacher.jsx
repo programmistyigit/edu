@@ -29,7 +29,7 @@ const Teacher = () => {
     const [data, setData] = useState(
         status === "login"
             ? { login: null, password: null, birthDay: null }
-            : { name: null, firstName: null, phoneNumber: null, birthDay: null, password: null, confirmPassword: null, spase: null, location: { viloyat: null, tuman: null, mahalla: null } }
+            : { name: null, firstName: null, phoneNumber: null, birthDay: null, password: null, confirmPassword: null, spase: null, location: { viloyat: null, tuman: null } }
     )
 
     const recoverDate = (value, ...properties) => setData(prevState => ({ ...prevState, [properties[0]]: properties.length == 1 ? value : { ...prevState[properties[0]], [properties[1]]: value } }))

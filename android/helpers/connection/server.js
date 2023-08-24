@@ -6,8 +6,12 @@ class Server {
     }
 
     async fetch(path , option={}){
-        const respons = await fetch(`${this.serverHost}${path}` , { method : "GET" , credentials : "include" , ...option} )
-        return await respons.json()
+        try {
+            const respons = await fetch(`${this.serverHost}${path}` , { method : "GET" , credentials : "include" , ...option} )
+            return await respons.json()
+        } catch (error) {
+            return error
+        }
     }
 
     async isLogin (){
@@ -21,6 +25,13 @@ class Server {
         teacher : async (options) => {
             const response = await this.fetch(`/auth/login/teacher` , options)
             return response
+        }
+    }
+
+    singUp = {
+        teacher : async (option) => {
+            const respons = await this.fetch("/auth/singup/teacher" , option)
+            return respons
         }
     }
     async getCityList () { return this.fetch("/cityList")}

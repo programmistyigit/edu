@@ -4,8 +4,8 @@ const cityList = createSlice({
     name:"cityList",
     initialState:[],
     reducers:{
-        setCityList(state , action) { 
-            return [...state , ...action.payload]
+        setCityList(_ , action) { 
+            return action.payload
         }
     }
 })

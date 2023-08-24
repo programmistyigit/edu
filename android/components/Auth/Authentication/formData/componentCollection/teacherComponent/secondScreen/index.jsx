@@ -1,17 +1,39 @@
 import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import { useContext } from 'react'
 import TeacherContex from '../../../../../../../contexts/TeacherContext'
 import { TextInput } from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useSelector } from 'react-redux'
-const SecondScreen = () => {
-    const { recoverDate } = useContext(TeacherContex)
+import * as yup from "yup"
+import _ from "lodash"
+import SubmitButton from './SubmitBtn'
+
+
+
+
+const SecondScreen = ({navigation}) => {
+    const { recoverDate , data , errorMessage} = useContext(TeacherContex)
     const [selectedDate, setSelectData] = useState([])
     const [open, setOpen] = useState(false);
     const spaceList = useSelector(e=>e.spaceList)
     const itemList = spaceList.map(e=> ({label : e.cours_name , value : e.cours_name}))
+
+    useEffect(() => {
+        recoverDate(selectedDate , "spase")
+        console.log(data);
+    } , [selectedDate])
+
+    const handleClick = () => {
+        const validate = yup.object().shape({
+            phoneNumber:yup.string().required(),
+            spase:yup.array().required()
+        })
+        validate.validate(_.pick(data , ["phoneNumber" , "spase"]))
+        .then(() => navigation.navigate("therd"))
+        .catch((e) => errorMessage(e.toString().split(":")[1]))
+    }
     return (
         <View style={style.container}>
 
@@ -19,6 +41,7 @@ const SecondScreen = () => {
                 <View style={style.loginInputView}>
                     <TextInput
                         style={style.loginInput}
+                        keyboardType={"phone-pad"}
                         placeholder="tel number"
                         placeholderTextColor="#5d9490"
                         onChangeText={(text) => recoverDate(text, "phoneNumber")}
@@ -37,7 +60,7 @@ const SecondScreen = () => {
                         multiple={true}
                         min={0}
                         max={10}
-                        placeholder='fanlaringizni tanlang'
+                        placeholder='faoliyatingizni blgilang!'
                         showTickIcon={true}
                         showArrowIcon={true}
                         theme='DARK'
@@ -45,6 +68,7 @@ const SecondScreen = () => {
                         badgeStyle={{ backgroundColor: "cyan" }}
                     />
                 </View>
+                <SubmitButton onClick={handleClick}/>
             </View>
         </View>
     )
