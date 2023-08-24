@@ -1,19 +1,30 @@
 import React, { useState } from 'react';
-import { View, TextInput, Pressable, Text } from 'react-native';
 import { useSelector } from 'react-redux';
-import { StyleSheet } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import server from '../../../../../helpers/connection/server';
 import { useToast } from 'native-base';
 import { useContext } from 'react';
 import Context from '../../../../../contexts/Contex';
+import { createStackNavigator } from '@react-navigation/stack';
+import TeacherContex from '../../../../../contexts/TeacherContext';
+import TeacherScreen from './teacherComponent/firstSCreen';
+import { StyleSheet } from 'react-native';
+import SecondScreen from './teacherComponent/secondScreen';
+import TherdScreen from './teacherComponent/therdScreen';
+import FourthScreen from './teacherComponent/fourthScreen';
+
+const NativeStack = createStackNavigator()
 
 const Teacher = () => {
     const { setIsLogin } = useContext(Context)
     const [date, setDate] = useState(new Date());
     const [showDateTimePicker, setShowDateTimePicker] = useState(false);
+    const [selectCity, setSelectCity] = useState(null)
+    const [selectSpace, setSelectSpace] = useState(null)
+
     const { status } = useSelector(e => e.role)
+    const spaceList = useSelector(e => e.spaceList)
+    const cityList = useSelector(e => e.cityList)
+
     const tost = useToast()
     const [data, setData] = useState(
         status === "login"
@@ -27,7 +38,6 @@ const Teacher = () => {
     const handleDateChange = (event, selectedDate) => {
         if (event.type === "set") {
             const d = new Date(selectedDate)
-            console.log(event, selectedDate);
             const currentDate = selectedDate || date;
             setShowDateTimePicker(false);
             setDate(currentDate);
@@ -35,6 +45,14 @@ const Teacher = () => {
         }
         setShowDateTimePicker(false);
     };
+    const errorMessage = (message) => tost.show({
+        description: message,
+        placement: 'top',
+        status: "error",
+        duration: 3000,
+        isClosable: false,
+        style: style["error"]
+    })
 
 
     const postDataToServer = async () => {
@@ -53,107 +71,26 @@ const Teacher = () => {
 
 
     return (
-        <View style={style.container}>
-            <View style={style.loginContainer}>
-                <View style={style.loginInputView}>
-                    <TextInput
-                        style={style.loginInput}
-                        placeholder="Ism"
-                        placeholderTextColor="#5d9490"
-                        onChangeText={(text) => recoverDate(text, "login")}
-                    />
-                </View>
-                
-                {status == "singUp" && (
-                    <>
-                        <View style={style.loginInputView}>
-                            <TextInput
-                                style={style.loginInput}
-                                placeholder="Familya"
-                                placeholderTextColor="#5d9490"
-                                onChangeText={(text) => recoverDate(text, "firstName")}
-                            />
-                        </View>
-                        <View style={style.loginInputView}>
-                            <TextInput
-                                style={style.loginInput}
-                                placeholder="telefon raqam"
-                                placeholderTextColor="#5d9490"
-                                onChangeText={(text) => recoverDate(text, "phoneNumber")}
-                            />
-                        </View>
-                    </>
-                )}
-                 <Pressable style={style.loginInputView} onPress={() => setShowDateTimePicker(true)}>
-                    <TextInput
-                        placeholder={"date you birthday"}
-                        value={date.toDateString()}
-                        placeholderTextColor={"#5d9490"}
-                        editable={false}
-                        style={style.loginInput}
-                    />
-                </Pressable>
-                <View style={style.loginInputView}>
-                    <TextInput
-                        style={style.loginInput}
-                        placeholder="Password"
-                        placeholderTextColor="#5d9490"
-                        secureTextEntry={true}
-                        onChangeText={(text) => recoverDate(text, "password")}
+        <TeacherContex.Provider value={{ status, recoverDate, setShowDateTimePicker, showDateTimePicker, date, handleDateChange, postDataToServer , data , errorMessage}}>
+            <NativeStack.Navigator>
+                <NativeStack.Screen options={{headerShown:false}} name='first' component={TeacherScreen} />
+                {status == "singUp" 
+                    &&
+                        [ 
+                            <NativeStack.Screen key={"second"} options={{headerShown:false}} name='second' component={SecondScreen} />
+                            ,<NativeStack.Screen key={"thred"} options={{headerShown:false}} name='therd'  component={TherdScreen} />
+                            ,<NativeStack.Screen key={"fourth"} options={{headerShown:false}} name='fourth' component={FourthScreen} />
+                        ]
+                }
+            </NativeStack.Navigator>
+        </TeacherContex.Provider>
 
-                    />
-                </View>
-                {status == "singUp" && (
-                    <View style={style.loginInputView}>
-                        <TextInput
-                            style={style.loginInput}
-                            placeholder="confirm password"
-                            placeholderTextColor="#5d9490"
-                            secureTextEntry={true}
-                            onChangeText={(text) => recoverDate(text, "password")}
-
-                        />
-                    </View>
-                )}
-               
-                {/* {status == "singUp" && (
-
-                )} */}
-            </View>
-
-            {
-                showDateTimePicker && (
-                    <DateTimePicker mode={"date"} display={"spinner"} value={date} onChange={handleDateChange} />
-                )
-            }
-
-            <TouchableOpacity onPress={postDataToServer} style={{ ...style.loginInputView, alignItems: "center", marginTop: 20 }}  >
-                <Text style={{ color: "cyan", fontSize: 20 }}>{status}</Text>
-            </TouchableOpacity>
-        </View >
     );
 };
+
 const style = StyleSheet.create(
     {
-        container: {
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            color: "blue"
-        },
-        loginContainer: {
-            padding: 5,
-            gap: 4
-        },
-        loginInputView: {
-            padding: 10,
-            width: 250,
-            height: "auto",
-            backgroundColor: "#282929",
-        },
-        loginInput: {
-            color: "cyan",
-        },
+
         success: {
             backgroundColor: "green"
         },
@@ -165,5 +102,6 @@ const style = StyleSheet.create(
         }
     }
 )
+
 
 export default Teacher;

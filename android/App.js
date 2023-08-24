@@ -54,14 +54,14 @@ function App() {
 
   return (
     <Context.Provider value={{ setIsLogin }}>
-      {/* <NativeBaseProvider> */}
+      <NativeBaseProvider>
 
         {!isLogin ? <Auth />
           : <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             <Button title='logOut' onPress={handleClick} />
           </View>
         }
-      {/* </NativeBaseProvider> */}
+      </NativeBaseProvider>
     </Context.Provider>
   );
 }

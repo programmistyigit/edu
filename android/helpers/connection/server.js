@@ -1,4 +1,4 @@
-export const serverHost = "https://849c-213-230-93-248.ngrok-free.app"
+export const serverHost = "https://764a-213-230-92-89.ngrok-free.app"
 
 class Server {
     constructor(host){
