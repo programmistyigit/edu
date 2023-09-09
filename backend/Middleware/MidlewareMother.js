@@ -34,7 +34,8 @@ const middlewareMother = async (req, res, next) => {
         )
     }
     const MotherIsDB = await MotherSchema.findById(MotherDataIsJson._id)
-    if (!MotherIsDB || MotherDataIsJson.mother_name != MotherIsDB?.mother_name) {
+
+    if (!MotherIsDB || MotherDataIsJson.mother_login != MotherIsDB.mother_login) {
         return (
             res
                 .status(400)

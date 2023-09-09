@@ -3,6 +3,7 @@ const { Schema, model } = require("mongoose");
 const teacherSchema = new Schema({
     teacher_name: { type: String, default: "Guest" },
     teacher_firstName: { type: String, default: "GuestFirstName" },
+    teacher_login: { type: String, unique: true, required: true },
     teacher_phoneNumber: { type: String, default: "+9989-xxx-nn-yy" },
     teacher_status: { type: String, default: "online" },
     teacher_avatar: { type: String, default: "https://w7.pngwing.com/pngs/799/987/png-transparent-computer-icons-avatar-social-media-blog-font-awesome-avatar-heroes-computer-wallpaper-social-media.png" },

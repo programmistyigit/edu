@@ -4,11 +4,12 @@ const _ = require("lodash");
 const MotherSchema = require("../../../MongoDB/Schema/MotherSchema");
 const { GenerateToken } = require("../../../jwt/jsonwebtoken");
 const reverse_obj = require("../../../utils/reverse/in_bazaSchema_object");
+const bcrypt = require("bcrypt")
 
 const routes = Router();
 
 routes.post("/", async (req, res) => {
-    const { value, error } = motherValidate.validate(_.pick(req.body, ["name", "firstName", "password", "confirmPassword", "birthDay"]))
+    const { value, error } = motherValidate.validate(_.pick(req.body, ["name", "firstName", "login", "password", "confirmPassword", "birthDay"]))
 
     // esli error
     if (error) {
@@ -28,7 +29,7 @@ routes.post("/", async (req, res) => {
     // esli error
 
     const mother_obj = reverse_obj("mother", value)
-    const onTheBaza = await MotherSchema.findOne(_.pick(mother_obj, ["mother_name", "mother_firstName", "mother_birthDay"]))
+    const onTheBaza = await MotherSchema.findOne(_.pick(mother_obj, ["mother_login"]))
 
     if (onTheBaza) {
         return (
@@ -37,22 +38,32 @@ routes.post("/", async (req, res) => {
                 .json(
                     {
                         status: "warning",
-                        message: "bunday malumotlar bazada aniqlandi iltimos boshqa ism ostida kirib koring"
+                        message: "Username already exists"
                     }
                 )
         )
     }
-    const createBaza = await MotherSchema.create(mother_obj);
-    const token = GenerateToken({..._.pick(createBaza, ["_id", "mother_name", "mother_firstName"]) , role:"mother"});
+
+    const { password } = value
+    const hashPassword = await bcrypt.hash(password, 10)
+
+    const createBaza = await MotherSchema.create({
+        ...mother_obj,
+        mother_password: hashPassword,
+    });
+
+    const token = GenerateToken({ ..._.pick(createBaza, ["_id", "login"]), role: "mother" });
     res
         .cookie("auth", token, { maxAge: 60 * 60 * 24 * 100 })
         .status(200)
         .json(
             {
                 status: "success",
-                message: "success!"
+                message: "Fucking success!"
             }
         )
 })
+
+
 
 module.exports = routes;

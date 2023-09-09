@@ -33,8 +33,8 @@ const middlewareStudent = async (req, res, next) => {
                 )
         )
     }
-    const StudentIsDB = await StudentSchema.findById(StudentDataIsJson._id)
-    if (!StudentIsDB || StudentDataIsJson.student_name != StudentIsDB?.student_name) {
+       const StudentIsDB = await StudentSchema.findById(StudentDataIsJson._id)
+    if (!StudentIsDB || StudentDataIsJson.student_login != StudentIsDB.student_login) {
         return (
             res
                 .status(400)
@@ -47,6 +47,7 @@ const middlewareStudent = async (req, res, next) => {
                 )
         )
     }
+
     req.id = StudentIsDB._id
     next()
 }

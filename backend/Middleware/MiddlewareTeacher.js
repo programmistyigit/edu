@@ -34,7 +34,7 @@ const middlewareTeacher = async (req, res, next) => {
             )
         }
         const TeacherIsDB = await TeacherSchema.findById(TeacherDataIsJson._id)
-        if (!TeacherIsDB || TeacherDataIsJson.teacher_name != TeacherIsDB?.teacher_name) {
+        if (!TeacherIsDB || TeacherDataIsJson.teacher_login != TeacherIsDB?.teacher_login) {
             return (
                 res
                     .status(400)

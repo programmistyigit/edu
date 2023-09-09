@@ -2,6 +2,7 @@ const { Schema, model } = require("mongoose");
 
 const studentSchema = new Schema({
     student_name: { type: String, default: "Guest" }, // ismi
+    student_login: { type: String, unique: true}, 
     student_firstName: { type: String, default: "GuestFirstName" }, // familyasi
     student_phoneNumber: { type: String, default: "+9989-xxx-nn-yy" }, // telefon raqam
     student_email: { type: String, default: "exomple@mail.com" }, // email
