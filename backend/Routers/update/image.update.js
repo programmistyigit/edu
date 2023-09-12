@@ -1,3 +1,4 @@
+
 const express = require("express");
 const sharp = require('sharp');
 const uuid = require("uuid").v4; // Import and use uuid
@@ -50,8 +51,8 @@ router.put("/mother/image", middlewareMother, async (req, res) => {
                     return res.status(400).send("Image size is too large.");
                 }
 
-                // Update the mother's avatar field in the database
-                findMother.mother_avatar = uniqueFilename;
+                const imageUrl = `http://${host}/images/${uniqueFilename}`;
+        findMother.mother_avatar = imageUrl;
                 findMother.save()
                     .then(() => {
                         res.json({ message: "File uploaded with unique filename: " + uniqueFilename });
@@ -66,7 +67,7 @@ router.put("/mother/image", middlewareMother, async (req, res) => {
 
 
 router.put("/student/image", middlewareStudent, async (req, res) => {
-    
+    const host = req.get('host');
     const id = req.id
     const findStudent = await StudentSchema.findOne(id);
 
@@ -81,7 +82,7 @@ router.put("/student/image", middlewareStudent, async (req, res) => {
 
     uploadedFile.mv("uploads/" + uniqueFilename)
     sharp(uploadedFile.data)
-        .resize(300, 400)
+        .resize(400, 300)
         .toFile("uploads/" + uniqueFilename, (err, info) => {
             if (err) {
                 return res.status(500).send(err);
@@ -93,8 +94,8 @@ router.put("/student/image", middlewareStudent, async (req, res) => {
                 return res.status(400).send("Image size is too large.");
             }
         });
-
-    findStudent.student_avatar = uniqueFilename;
+        const imageUrl = `http://${host}/images/${uniqueFilename}`;
+        findStudent.student_avatar = imageUrl;
     await findStudent.save();
     return res.json({message:"Fucking success!"});
 });

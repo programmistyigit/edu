@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const CoursesSchema = require("../../MongoDB/Schema/CoursesSchema");
 
-const UzbekPhoneNumberPattern = /^(93|94|91|95|97|98|88|77|55|99)\s\d{3}\s\d{2}\s\d{2}$/;
+const UzbekPhoneNumberPattern = /^(99|93|94|95|91|90|97|98|55|77)\d{7}$/;
 
 const TeacherValidation = async () => {
     const allCourse = await CoursesSchema.find().lean();

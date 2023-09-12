@@ -14,9 +14,11 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors({ origin: "*" }));
-app.use('/images', express.static('uploads'));
 app.use(cookieParser("salom"));
 app.use(fileUpload());
+
+
+app.use('/images', express.static('uploads'));
 
 // Routers
 const adminRouter = require("./admin/admin");
@@ -58,6 +60,7 @@ app.use("/filter", OverSearchFilterRouter);
 app.get("/logOut", (req, res) => {
     res.clearCookie("auth", { maxAge: 60 * 60 * 24 * 100 }).status(200).json({ status: "success" });
 });
+///sss
 
 // Default route
 app.get("/", (req, res) => {
@@ -65,7 +68,7 @@ app.get("/", (req, res) => {
 });
 
 // Error middleware
-app.use((err, req, res, next) => {
+ app.use((err, req, res, next) => {
     console.error(err);
     if (err) {
         res.status(500).json({ status: "error", message: "Server error", error: err.toString() });

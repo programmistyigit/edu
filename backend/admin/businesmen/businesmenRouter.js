@@ -3,7 +3,7 @@ const _ = require("lodash")
 const BusinesMenSChema = require("../../MongoDB/Schema/BusinesMenSChema")
 const reverse_obj = require("../../utils/reverse/in_bazaSchema_object")
 const { default: mongoose } = require("mongoose")
-
+const bcrypt = require("bcrypt")
 const router = require("express").Router()
 
 /*
@@ -45,6 +45,8 @@ router.post("/add" , async ( req , res ) => {
     }
 
     const businesmenCreatedData = reverse_obj("businesmen" , value)
+    businesmenCreatedData.businesmen_password = await bcrypt.hash(value.password , 10)
+    console.log(businesmenCreatedData);
     const newBusinesmen = await BusinesMenSChema.create(businesmenCreatedData)
     res
         .status(200)

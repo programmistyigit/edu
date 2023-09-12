@@ -112,13 +112,13 @@ routes.post("/mother", async (req, res) => {
                 }
             )
     }
-   
+
     const checkPassword = await bcrypt.compare(value.password, motherSearchresult.mother_password)
-    
+
     if (!checkPassword) {
         return res
-          .status(400)
-         .json(
+            .status(400)
+            .json(
                 {
                     status: "warning",
                     message: "Passwords do not match",
@@ -128,7 +128,7 @@ routes.post("/mother", async (req, res) => {
     }
 
     const token = GenerateToken({ ..._.pick(motherSearchresult, ["_id", "mother_login"]), role: "mother" })
-    
+
     return (
         res
             .cookie("auth", token, { maxAge: 60 * 60 * 24 * 100 })
@@ -169,9 +169,10 @@ routes.post("/student", async (req, res) => {
     }
 
     const studentSearchResult = await StudentSchema.findOne({ student_login: value.login })
-    
-    
+
+
     if (!studentSearchResult) {
+
         res
             .status(400)
             .json(
@@ -180,23 +181,24 @@ routes.post("/student", async (req, res) => {
                     message: "foydalanuvchi topilmadi 😔"
                 }
             )
+        return;
     }
-    
+
     const checkPassword = await bcrypt.compare(value.password, studentSearchResult.student_password)
-   
+
     if (!checkPassword) {
         return res
-          .status(400)
-         .json(
+            .status(400)
+            .json(
                 {
                     status: "warning",
                     message: "Passwords do not match",
                     error
                 }
             )
-        }
+    }
 
-        
+
 
 
     const token = GenerateToken({ ..._.pick(studentSearchResult, ["_id", "student_login"]), role: "student" })

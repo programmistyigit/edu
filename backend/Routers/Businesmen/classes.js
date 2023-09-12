@@ -488,7 +488,7 @@ router.post("/remove_student", async (req, res) => {
 })
 
 /*
-    * -----     route         =>   businesmen/follow_student                                    -------
+    * -----     route         =>   businesmen/classes/follow_student                                    -------
     * -----     method        =>   *                                                            -------
     * -----     description   =>   guruxga yozilish uchun ariza jonatganlar bilan ioshlash      -------
     * -----     whoami        =>   businesmen                                                   -------

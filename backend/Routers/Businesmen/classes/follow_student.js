@@ -10,7 +10,7 @@ const generateMessage = require("../../../helpers/classes/studentOnRemoveGenerat
 
 
 /*
-    * -----     route         =>   businesmen/follow_student                                    -------
+    * -----     route         =>   businesmen/classes/follow_student                                    -------
     * -----     method        =>   delete                                                       -------
     * -----     description   =>   guruxga yozilish uchun ariza jonatganlar bilan ishlash       -------
     * -----     whoami        =>   businesmen                                                   -------
@@ -44,7 +44,7 @@ router.delete("/:id" , async ( req , res ) => {
 
 
 /*
-    * -----     route         =>   businesmen/follow_student                                    -------
+    * -----     route         =>   businesmen/classes/follow_student                                    -------
     * -----     method        =>   post                                                         -------
     * -----     description   =>   guruxga yozilish uchun ariza jonatganlar bilan ishlash       -------
     * -----     whoami        =>   businesmen                                                   -------
@@ -71,7 +71,7 @@ router.post("/:id" , async ( req , res ) => {
 
     const student = await StudentSchema.findById(value.studentId)
     if(!student){
-        await ClassesSchema.findByIdAndUpdate(classes._id , { $pull : {class_follow_studentsId : value.studentId } } )
+        await ClassesSchema.findByIdAndUpdate(classes._id , { $pull : { class_follow_studentsId : value.studentId } } )
         return res.status(400).json( { status : "error" , message : "oquvchi bazadan topilmadi!" , target : value.studentId } )
     }
 
@@ -79,6 +79,8 @@ router.post("/:id" , async ( req , res ) => {
         await ClassesSchema.findByIdAndUpdate(classes._id , { $pull : { class_follow_studentsId : student._id}})
         return res.status(400).json( { status : "error" , message : "o'quvchi malumotlarida gurux topilmadi u sizga ariza qoldirmaganga o'xshaydi !"})
     }
+
+    if(!classes.class_follow_studentsId.map(e=>e._id.toString()).includes(student._id.toString())) return res.status(401).json({ status : "warning" , message : `${student.student_name} sizning ${classes.class_name} guruxingizga sorov jonatmaganga oxshaydi!` })
 
     await ClassesSchema.findByIdAndUpdate(classes._id , { $pull : { class_follow_studentsId : student._id } , $push : {class_studentsId : student._id } } )
     const message = `yana ${parseInt(classes.class_maxNumberStudent)-parseInt(classes.class_studentsId.length)} oquvchi yigilgandan song dars boshlanadi !`
