@@ -13,7 +13,10 @@ const middlewareStudent = require("../../Middleware/MidlewareStudent");
 const StudentSchema = require("../../MongoDB/Schema/StudentSchema");
 const middlewareTeacher = require("../../Middleware/MiddlewareTeacher");
 const TeacherSchema = require("../../MongoDB/Schema/TeacherSchema");
-
+const middlewareBusinesmen = require("../../Middleware/MidlewareBusinesmen");
+const ClassesSchema = require("../../MongoDB/Schema/ClassesSchema");
+const { default: mongoose } = require("mongoose");
+const host = process.env.HOST
 const router = express.Router();
 
 router.put("/mother/image", middlewareMother, async (req, res) => {
@@ -51,7 +54,7 @@ router.put("/mother/image", middlewareMother, async (req, res) => {
                     return res.status(400).send("Image size is too large.");
                 }
 
-                const imageUrl = `http://${host}/images/${uniqueFilename}`;
+                const imageUrl = `${host}/images/${uniqueFilename}`;
         findMother.mother_avatar = imageUrl;
                 findMother.save()
                     .then(() => {
@@ -64,10 +67,41 @@ router.put("/mother/image", middlewareMother, async (req, res) => {
     });
 });
 
+router.put("/businesmen/classes", middlewareBusinesmen , async (req, res) => {
+    const id = req.id
+    const classessId = req.body._id
+    if(!mongoose.Types.ObjectId.isValid(classessId)) return res.status(400).json( { status : "error" , message : "invalid class id !"})
+    const classes = await ClassesSchema.findById(classessId)
+    if(!classes) return res.status(400).json({ status : "warning" , message : "class not found"})
+    if(classes.class_BusinesmenID.toString() != id) return res.status(400).json( { status :"warning" , message : "forbidden attempt"})
 
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send("No files were uploaded.");
+    }
+    const uploadedFile = req.files.classes_avatar;
+    if(!uploadedFile) return res.status(400).json( { status : "error" , message : "file not found"})
+    const uniqueFilename = uuid() + "." + uploadedFile.name.split(".").pop(); // Adds UUID to the original file extension
+    uploadedFile.mv("uploads/" + uniqueFilename)
+    sharp(uploadedFile.data)
+        .resize(400, 300)
+        .toFile("uploads/" + uniqueFilename, (err, info) => {
+            if (err) {
+                return res.status(500).send(err);
+            }
+
+            // Check the file size
+            if (info.size > 5 * 1024 * 1024) {
+                // If the resized image is larger than 5 MB, you can handle this case as needed
+                return res.status(400).send("Image size is too large.");
+            }
+        });
+        const imageUrl = `${host}/images/${uniqueFilename}`;
+        classes.class_avatar = imageUrl
+        await classes.save()
+        res.status(200).json( { status: "success" , message : "avatar uploaded" , url : imageUrl , class: _.pick(classes , ["_id" , "class_name"])})
+})
 
 router.put("/student/image", middlewareStudent, async (req, res) => {
-    const host = req.get('host');
     const id = req.id
     const findStudent = await StudentSchema.findOne(id);
 
@@ -94,7 +128,7 @@ router.put("/student/image", middlewareStudent, async (req, res) => {
                 return res.status(400).send("Image size is too large.");
             }
         });
-        const imageUrl = `http://${host}/images/${uniqueFilename}`;
+        const imageUrl = `${host}/images/${uniqueFilename}`;
         findStudent.student_avatar = imageUrl;
     await findStudent.save();
     return res.json({message:"Fucking success!"});

@@ -9,23 +9,33 @@ const routes            = Router();
     * -----     description   =>   get data student               -------
     * -----     whoami        =>   student                        -------
 */
-routes.get("/data_me" , async ( req , res ) => {
-    const student = await StudentSchema.findById(req.id);
-        await student.populate({path : "student_classesID" , strictPopulate:false})
-        await student.populate({path : "student_notification" , strictPopulate:false})
-        await student.populate({path : "student_message" , strictPopulate:false})
-
-        res
-            .status(200)
-            .json(
-                {
-                    data:{
-                        student
-                    }
-                }
-            )
-})
-
+routes.get("/data_me", async (req, res) => {
+    try {
+      const student = await StudentSchema.findById(req.id)
+        .populate([
+          {
+            path: "student_classesID",
+            populate: [
+              { path: "class_BusinesmenID" , select : "-businesmen_password -businesmen_login -businesmen_not_success_message_default_text"},
+              { path: "class_groupSpase" },
+            ],
+          },
+          { path: "student_notification", strictPopulate: false },
+          { path: "student_message", strictPopulate: false },
+        ]);
+  
+      res.status(200).json({
+        data: {
+          student,
+        },
+      });
+      console.log(student.student_classesID[0]);
+    } catch (error) {
+      res.status(500).json({
+        error: "An error occurred while fetching student data.",
+      });
+    }
+  });
 
 /*
     * -----     route         =>   student/class/*                -------

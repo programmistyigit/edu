@@ -89,7 +89,7 @@ router.get("/follow/:id", async (req, res) => {
                 )
         )
     }
-    await ClassesSchema.findByIdAndUpdate(id, { $push: { class_follow_studentsId: req.id } })
+    const newClassData = await ClassesSchema.findByIdAndUpdate(id, { $push: { class_follow_studentsId: req.id } } , { new : true })
 
 
     res
@@ -98,7 +98,7 @@ router.get("/follow/:id", async (req, res) => {
             {
                 status: "success",
                 message: "success!",
-                data: classes
+                data: newClassData
             }
         )
 })

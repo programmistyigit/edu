@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const routes = Router();
 const Joi = require("joi");
 const mongoose = require("mongoose");
 
@@ -12,8 +13,9 @@ const MothersSchema = require("../../MongoDB/Schema/MotherSchema");
 const StudentsSchema = require("../../MongoDB/Schema/StudentSchema");
 const TeachersSchema = require("../../MongoDB/Schema/TeacherSchema");
 const oneSearchRouter = require("./one/index")
-const routes = Router();
+const moreSearchRouter = require("./more/index")
 routes.use("/single" , oneSearchRouter)
+routes.use("/more" , moreSearchRouter)
 
 // Define a mapping of schema names to human-readable names
 // const schemaNames = {

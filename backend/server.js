@@ -77,6 +77,10 @@ app.get("/", (req, res) => {
     }
 });
 
+app.get("/host" , (req, res) => {
+    res.send(req.get("host"))
+})
+
 // Server listen
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

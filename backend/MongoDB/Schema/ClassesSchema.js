@@ -2,6 +2,7 @@ const { Schema, model, default: mongoose } = require("mongoose");
 
 const classesSchema = new Schema({
     class_name: { type: String, required: true },
+    class_avatar: { type :String , default :"https://images.unsplash.com/photo-1594312915251-48db9280c8f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"},
     class_groupSpase: { type: Schema.Types.ObjectId , ref : "Courses"},
     class_durationDays: { type: String, required: true },
     class_theDayAfterTheStart: { type: String, default: "0" },

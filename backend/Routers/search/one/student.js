@@ -11,7 +11,7 @@ router.get("/:id" , async (req , res) => {
         
         await userData.populate({ path :"student_classesID" , strictPopulate : false })
 
-    const successData = _.pick(userData , ["student_login" , "student_name" , "student_avatar" , "student_appropriation" , "student_birthDay" , "student_firstName" , "student_classesID" , "student_rank" , "student_status"])
+    const successData = _.pick(userData , ["_id" ,"student_login" , "student_name" , "student_avatar" , "student_appropriation" , "student_birthDay" , "student_firstName" , "student_classesID" , "student_rank" , "student_status"])
     res.status(200).json(successData)
 })
 
