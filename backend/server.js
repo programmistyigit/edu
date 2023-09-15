@@ -60,7 +60,8 @@ app.use("/filter", OverSearchFilterRouter);
 app.get("/logOut", (req, res) => {
     res.clearCookie("auth", { maxAge: 60 * 60 * 24 * 100 }).status(200).json({ status: "success" });
 });
-///sss
+
+
 
 // Default route
 app.get("/", (req, res) => {

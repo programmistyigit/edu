@@ -59,7 +59,7 @@ routes.post("/", async (req, res) => {
         .json(
             {
                 status: "success",
-                message: "Fucking success!"
+                message: "Welcom success!"
             }
         )
 })

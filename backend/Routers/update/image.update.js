@@ -131,7 +131,7 @@ router.put("/student/image", middlewareStudent, async (req, res) => {
         const imageUrl = `${host}/images/${uniqueFilename}`;
         findStudent.student_avatar = imageUrl;
     await findStudent.save();
-    return res.json({message:"Fucking success!"});
+    return res.json({message:"Welcome success!"});
 });
 
 
@@ -174,7 +174,7 @@ router.put("/teacher/image", middlewareTeacher, async (req, res) => {
             findTeacher.teacher_avatar = uniqueFilename;
             findTeacher.save()
                 .then(() => {
-                    res.json({ message: "Fucking success!" });
+                    res.json({ message: "Welcome success!" });
                 })
                 .catch((dbErr) => {
                     res.status(500).send(dbErr);

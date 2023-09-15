@@ -6,6 +6,7 @@ const students              = require("./Businesmen/students");
 const coursRouter           = require("./Businesmen/course")
 const spaceRouter           = require("./Businesmen/space");
 const planRouter            = require("./Businesmen/plan");
+const libraryRouter            = require("./Businesmen/library");
 
 const routes = Router();
 
@@ -84,6 +85,13 @@ routes.use("/students" , students)
 */
 
 routes.use("/plan" , planRouter)
+
+
+
+
+
+routes.use("/library" , libraryRouter)
+
 
 
 // routes.use("/comparison" , async (req, res)=>{

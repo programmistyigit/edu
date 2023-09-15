@@ -136,7 +136,7 @@ routes.post("/mother", async (req, res) => {
             .json(
                 {
                     status: "success",
-                    message: "Fucking Welcome tizimga qaytganingizdan hursandmiz hurmatli ota-ona"
+                    message: "Welcome tizimga qaytganingizdan hursandmiz hurmatli ota-ona"
                 }
             )
     )
@@ -209,7 +209,7 @@ routes.post("/student", async (req, res) => {
             .json(
                 {
                     status: "success",
-                    message: "Fucking Welcome, qaytganinguzdan hursandmiz hurmatli oquvchi oqishlaringizga omad!"
+                    message: "Welcome, qaytganinguzdan hursandmiz hurmatli oquvchi oqishlaringizga omad!"
                 }
             )
     )

@@ -4,7 +4,6 @@ const BusinesMenSChema = require("../MongoDB/Schema/BusinesMenSChema")
 
 const middlewareBusinesmen = async (req, res, next) => {
     const cookie = req.cookies?.auth
-    console.log(cookie);
     if (!cookie) {
         return (
             res
