@@ -18,6 +18,7 @@ const middlewareTeacher = async (req, res, next) => {
                 )
         )
     }
+    //Teacjher
 
         const TeacherDataIsJson = ReGenerateToken(cookie)
         if(!mongoose.Types.ObjectId.isValid(TeacherDataIsJson._id)){
@@ -28,7 +29,7 @@ const middlewareTeacher = async (req, res, next) => {
                     .json(
                         {
                             status:"error",
-                            message:"cookie hatoligi!"
+                            message:"cookie hatoligi! Error"
                         }
                     )
             )
