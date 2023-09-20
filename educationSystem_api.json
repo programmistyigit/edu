@@ -1,0 +1,385 @@
+{
+	"info": {
+		"_postman_id": "a19df2a2-e767-4b20-8957-8b7cdf76c5f2",
+		"name": "educationSystem",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "studenst",
+			"item": [
+				{
+					"name": "authentication",
+					"item": [
+						{
+							"name": "singUp",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"begzodd\",\r\n    \"firstName\":\"mamavjonov\",\r\n    \"password\":\"12345\",\r\n    \"confirmPassword\":\"12345\",\r\n    \"phoneNumber\":\"999505609\",\r\n    \"email\":\"pragrammistyigit@gmail.com\",\r\n    \"birthDay\":\"2000.03.08\",\r\n    \"location\":{\r\n        \"tuman\":\"dostlik\",\r\n        \"viloyat\":\"jizzax\",\r\n        \"mahalla\":\"qaxramon\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:5000/auth/singup/student"
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"login\":\"begzodd\",\r\n    \"password\":\"12345\",\r\n    \"birthDay\":\"2000.03.08\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:5000/auth/login/student"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "malumotlarni olish",
+					"item": [
+						{
+							"name": "get all data",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:5000/student/data_me"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "class",
+					"item": [
+						{
+							"name": "follow class",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:5000/student/class/follow/64a27b1622fb68e9d4909d90"
+							},
+							"response": []
+						},
+						{
+							"name": "un follow class",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:5000/student/class/unfollow/64a27b1622fb68e9d4909d90"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "teacher",
+			"item": [
+				{
+					"name": "authentication",
+					"item": [
+						{
+							"name": "singUp",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"begzod\",\r\n    \"firstName\":\"Mamajonov\",\r\n    \"phoneNumber\":\"999505609\",\r\n    \"birthDay\":\"2000.03.08\",\r\n    \"password\":\"@Begz0dbek\",\r\n    \"confirmPassword\":\"@Begz0dbek\",\r\n    \"spase\":[\"ona-tili\"],\r\n    \"location\":{\r\n        \"viloyat\":\"Jizzax\",\r\n        \"tuman\":\"dostlik\",\r\n        \"mahalla\":\"qaxramon\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:5000/auth/singup/teacher"
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"login\":\"begzod\",\r\n    \"password\":\"@Begz0dbek\",\r\n    \"birthDay\":\"2000.03.08\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:5000/auth/login/teacher"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "businesmen",
+					"item": [
+						{
+							"name": "follow businesmen",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:5000/teacher/businesmen/follow/64a27929b32071097b6be5b9"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "malumotlarni olish",
+					"item": [
+						{
+							"name": "get data_me",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:5000/teacher/data_me"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "mother",
+			"item": [
+				{
+					"name": "authentication",
+					"item": [
+						{
+							"name": "singUp",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Umida\",\r\n    \"firstName\":\"Sattorova\",\r\n    \"password\":\"@Begz0dbek\",\r\n    \"confirmPassword\":\"@Begz0dbek\",\r\n    \"birthDay\":\"1975.06.19\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:5000/auth/singup/mother"
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"login\":\"Umida\",\r\n    \"password\":\"@Begz0dbek\",\r\n    \"birthDay\":\"1975.06.19\"\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:5000/auth/login/mother"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "businesmen",
+			"item": [
+				{
+					"name": "authentication",
+					"item": [
+						{
+							"name": "singUp",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"login\":\"qalampir\",\r\n    \"password\":\"@Begz0dbek\",\r\n    \"confirmPassword\":\"@Begz0dbek\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:5000/auth/singup/businesmen"
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"login\":\"qalampir\",\r\n    \"password\":\"@Begz0dbek\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:5000/auth/login/businesmen"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "getData",
+					"item": [
+						{
+							"name": "getAlldata",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:5000/businesmen/alldata"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "class",
+					"item": [
+						{
+							"name": "class add",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"qaldirgochlar\",\r\n    \"groupSpase\": \"ona-tili\",\r\n    \"durationDays\": \"160\",\r\n    \"BigTeacherId\":\"64a2791ab32071097b6be5b4\",\r\n    \"maxNumberStudent\":25,\r\n    \"table\":[{\"hours\":\"14:00\" , \"duration\":\"120\" , \"day\":1} , {\"hours\":\"14:00\" , \"duration\":\"120\" , \"day\":3} , {\"hours\":\"14:00\" , \"duration\":\"120\" , \"day\":5} ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:5000/businesmen/classes/add"
+							},
+							"response": []
+						},
+						{
+							"name": "start class",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":\"64a27b1622fb68e9d4909d90\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:5000/businesmen/classes/start"
+							},
+							"response": []
+						},
+						{
+							"name": "class rate",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"_id\":\"64a27b1622fb68e9d4909d90\",\r\n    \"rate\":1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:5000/businesmen/classes/rate"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "teacher controls",
+					"item": [
+						{
+							"name": "teacher add",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"id\":\"64a2791ab32071097b6be5b4\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:5000/businesmen/teacher/add"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "businesmen",
+					"item": [
+						{
+							"name": "New businesmen add",
+							"request": {
+								"method": "POST",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "course",
+					"item": []
+				}
+			]
+		},
+		{
+			"name": "educationSystem",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:5000/teacher/data_me"
+			},
+			"response": []
+		}
+	]
+}
