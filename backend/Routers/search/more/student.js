@@ -2,13 +2,15 @@ const Joi = require("joi")
 const _ = require("lodash")
 const StudentSchema = require("../../../MongoDB/Schema/StudentSchema")
 const { default: mongoose } = require("mongoose")
+const router = require("express").Router()
+
 const idValidator = Joi.custom((value , helpers) => {
     if(!mongoose.Types.ObjectId.isValid(value)){
         return helpers.error("Invalid Id")
     }
     return value
 } , "mongoose objectId")
-const router = require("express").Router()
+
 router.post("/", async (req, res) => {
 
     try {
