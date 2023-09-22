@@ -80,7 +80,7 @@ const SearchScreen = () => {
         }
       </View>
     )
-  }, [searchText, totalLength, searchResult])
+  }, [searchText, totalLength, searchResult , state])
 
 
   return (
